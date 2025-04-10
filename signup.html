@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Construction Management</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Sign Up</h1>
+        <form action="home.html" method="post">
+            <div class="form-group">
+                <label for="new-username">Username:</label>
+                <input type="text" id="new-username" name="new-username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="new-password">Password:</label>
+                <input type="password" id="new-password" name="new-password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-role">Sign up as:</label>
+                <select id="signup-role" name="signup-role" required>
+                    <option value="operator">Operator</option>
+                    <option value="customer">Customer</option>
+                </select>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+</body>
+</html>

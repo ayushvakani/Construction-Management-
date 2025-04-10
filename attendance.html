@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Attendance System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .graph-container {
+      margin-top: 40px;
+    }
+    .edit-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .save-btn {
+      background-color: #008CBA;
+      color: white;
+      padding: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    input[type="number"] {
+      width: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Employee Attendance Record</h2>
+
+  <table id="attendanceTable">
+    <thead>
+      <tr>
+        <th>Employee Name</th>
+        <th>Days Worked (This Month)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="attendanceBody">
+      <!-- Rows will be dynamically generated -->
+    </tbody>
+  </table>
+
+  <div class="graph-container">
+    <canvas id="attendanceChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Employee Attendance Data (can be dynamically generated)
+  let employees = [
+    { name: 'John Doe', daysWorked: 18 },
+    { name: 'Jane Smith', daysWorked: 22 },
+    { name: 'Mike Johnson', daysWorked: 15 }
+  ];
+
+  // Initialize and display table
+  function loadTable() {
+    const tbody = document.getElementById('attendanceBody');
+    tbody.innerHTML = ''; // Clear previous content
+
+    employees.forEach((employee, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${employee.name}</td>
+        <td><input type="number" id="daysWorked-${index}" value="${employee.daysWorked}" disabled></td>
+        <td>
+          <button class="edit-btn" onclick="editAttendance(${index})">Edit</button>
+          <button class="save-btn" style="display:none;" onclick="saveAttendance(${index})">Save</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // Enable editing for a row
+  function editAttendance(index) {
+    document.getElementById(`daysWorked-${index}`).disabled = false;
+    document.querySelectorAll('.edit-btn')[index].style.display = 'none';
+    document.querySelectorAll('.save-btn')[index].style.display = 'inline-block';
+  }
+
+  // Save attendance data and disable editing
+  function saveAttendance(index) {
+    const daysWorkedInput = document.getElementById(`daysWorked-${index}`);
+    const newDaysWorked = parseInt(daysWorkedInput.value);
+    if (!isNaN(newDaysWorked) && newDaysWorked >= 0) {
+      employees[index].daysWorked = newDaysWorked;
+    }
+    daysWorkedInput.disabled = true;
+    document.querySelectorAll('.edit-btn')[index].style.display = 'inline-block';
+    document.querySelectorAll('.save-btn')[index].style.display = 'none';
+    updateChart();
+  }
+
+  // Load chart to display attendance
+  function loadChart() {
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    window.attendanceChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: employees.map(e => e.name),
+        datasets: [{
+          label: 'Days Worked',
+          data: employees.map(e => e.daysWorked),
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 31
+          }
+        }
+      }
+    });
+  }
+
+  // Update chart when attendance is edited
+  function updateChart() {
+    attendanceChart.data.datasets[0].data = employees.map(e => e.daysWorked);
+    attendanceChart.update();
+  }
+
+  // Load table and chart initially
+  window.onload = function() {
+    loadTable();
+    loadChart();
+  }
+</script>
+
+</body>
+</html>
